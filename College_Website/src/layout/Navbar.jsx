@@ -73,7 +73,7 @@ function DropdownItem({ item }) {
             {item.submenu.map((sub) => (
               <li key={sub}>
                 {/* Routing for submenus (optional, linking to a hash or section for now) */}
-                <Link to={`${item.path}#${sub.toLowerCase().replace(/ /g, '-')}`} className="block hover:bg-gray-100 px-3 py-1.5 rounded text-sm cursor-pointer whitespace-nowrap">
+                <Link to={`${item.path}/${sub.toLowerCase().replace(/ /g, '-')}`} className="block hover:bg-gray-100 px-3 py-1.5 rounded text-sm cursor-pointer whitespace-nowrap">
                   {sub}
                 </Link>
               </li>
