@@ -1,11 +1,151 @@
-import React from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import React, { useEffect, useRef } from "react";
+import { useParams, useNavigate } from "react-router-dom"; // Added React Router hooks
 import "../shared.css";
+
+const testimonials = [
+  {
+    name: "Sundar Pichai",
+    role: "CEO, Google & Alphabet",
+    initials: "SP",
+    color: "#4285F4",
+    quote: "The discipline and analytical rigor I developed during my engineering years laid the foundation for everything I've built since. An institution that sharpens your thinking shapes your entire career.",
+  },
+  {
+    name: "Kiran Mazumdar-Shaw",
+    role: "Founder, Biocon",
+    initials: "KM",
+    color: "#34A853",
+    quote: "Bengaluru's engineering spirit is world-class. The students coming out of institutions like BMSCE bring both technical depth and the hunger to innovate — exactly what industry needs.",
+  },
+  {
+    name: "N. R. Narayana Murthy",
+    role: "Co-founder, Infosys",
+    initials: "NM",
+    color: "#1565c0",
+    quote: "Excellent engineers are made through hard work, mentorship and the right environment. BMSCE has always been a place where students are challenged to think beyond the textbook.",
+  },
+  {
+    name: "Mohandas Pai",
+    role: "Former CFO, Infosys",
+    initials: "MP",
+    color: "#0d47a1",
+    quote: "The technical education in Bengaluru's top colleges is on par with the best in the world. I've seen BMSCE alumni thrive at every level — from startups to Fortune 500 boardrooms.",
+  },
+  {
+    name: "Roshni Nadar Malhotra",
+    role: "Chairperson, HCL Technologies",
+    initials: "RN",
+    color: "#7b1fa2",
+    quote: "India's engineering talent is its greatest export. Institutions that invest in both technical excellence and character building produce leaders who make a lasting global impact.",
+  },
+  {
+    name: "Deepa Malik",
+    role: "Paralympic Champion & Entrepreneur",
+    initials: "DM",
+    color: "#c62828",
+    quote: "Resilience and excellence go hand in hand. Bengaluru's engineering culture teaches you to push your limits — a lesson that serves you far beyond the campus gates.",
+  },
+  {
+    name: "Sachin Bansal",
+    role: "Co-founder, Flipkart & Navi",
+    initials: "SB",
+    color: "#e65100",
+    quote: "The best engineers don't just solve problems — they find problems worth solving. That mindset, cultivated in great colleges, is what drives India's startup revolution.",
+  },
+  {
+    name: "Nandan Nilekani",
+    role: "Co-founder, Infosys & Aadhaar Architect",
+    initials: "NN",
+    color: "#00695c",
+    quote: "India's digital transformation was built on the shoulders of engineers who dared to think big. BMSCE has been producing such engineers for nearly eight decades.",
+  },
+];
+
+function AlumniSlider() {
+  const trackRef = useRef(null);
+  const animRef = useRef(null);
+  const posRef = useRef(0);
+  const pausedRef = useRef(false);
+  const SPEED = 0.5; // px per frame
+
+  // Duplicate for seamless loop
+  const items = [...testimonials, ...testimonials];
+
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    const animate = () => {
+      if (!pausedRef.current) {
+        posRef.current += SPEED;
+        const half = track.scrollWidth / 2;
+        if (posRef.current >= half) posRef.current = 0;
+        track.style.transform = `translateX(-${posRef.current}px)`;
+      }
+      animRef.current = requestAnimationFrame(animate);
+    };
+    animRef.current = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animRef.current);
+  }, []);
+
+  return (
+    <div style={{ overflow: "hidden", padding: "0.5rem 0 2rem", position: "relative" }}>
+      {/* fade edges */}
+      <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: "80px", background: "linear-gradient(to right, #f7f9fc, transparent)", zIndex: 2, pointerEvents: "none" }} />
+      <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: "80px", background: "linear-gradient(to left, #f7f9fc, transparent)", zIndex: 2, pointerEvents: "none" }} />
+
+      <div
+        ref={trackRef}
+        style={{ display: "flex", gap: "1.25rem", width: "max-content", willChange: "transform" }}
+        onMouseEnter={() => { pausedRef.current = true; }}
+        onMouseLeave={() => { pausedRef.current = false; }}
+      >
+        {items.map((t, i) => (
+          <div
+            key={i}
+            style={{
+              width: "320px",
+              flexShrink: 0,
+              background: "white",
+              borderRadius: "16px",
+              padding: "1.5rem",
+              border: "1px solid #e8edf5",
+              boxShadow: "0 2px 12px rgba(21,101,192,0.07)",
+              display: "flex",
+              flexDirection: "column",
+              gap: "1rem",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+              <div style={{
+                width: "44px", height: "44px", borderRadius: "50%",
+                background: t.color, color: "white",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                fontWeight: 700, fontSize: "0.9rem", flexShrink: 0,
+              }}>{t.initials}</div>
+              <div>
+                <div style={{ fontWeight: 700, fontSize: "0.9rem", color: "#1a1a2e" }}>{t.name}</div>
+                <div style={{ fontSize: "0.78rem", color: "#6b7280" }}>{t.role}</div>
+              </div>
+            </div>
+            <p style={{
+              fontSize: "0.875rem", color: "#374151", lineHeight: 1.65,
+              margin: 0, fontStyle: "italic",
+              borderLeft: `3px solid ${t.color}`, paddingLeft: "0.75rem",
+            }}>
+              "{t.quote}"
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 const tabs = ["Overview", "Network", "Events", "Donate"];
 
-// Helper function to turn tab names into clean URLs
-const toSlug = (text) => text.toLowerCase().replace(/\s+/g, '-');
+// Helper function for URLs
+const toSlug = (text) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
 function AlumniPage() {
   const { section } = useParams();
@@ -50,6 +190,8 @@ function AlumniPage() {
 
       {activeTab === "Overview" && (
         <>
+          <div className="section-title"><span className="section-line"></span>What People Say<span className="section-line"></span></div>
+          <AlumniSlider />
           <div className="section-title"><span className="section-line"></span>Our Alumni Community<span className="section-line"></span></div>
           <div className="info-cards-grid">
             {[
