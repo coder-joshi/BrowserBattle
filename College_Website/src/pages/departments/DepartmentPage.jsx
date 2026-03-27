@@ -385,8 +385,8 @@ function AlumniSection({ dept }) {
         <h3 style={{ color: dept.color }}>Stay Connected</h3>
         <p>BMSCE has a robust alumni network. Graduates from the {dept.name} department are employed in leading organizations in India and abroad. They serve as brand ambassadors of the college and contribute to academic activities, placements, and mentoring.</p>
         <div className="alumni-actions">
-          <a href="https://bmsce.ac.in/" className="btn-primary" style={{ background: dept.color }} target="_blank" rel="noreferrer">Register as Alumni</a>
-          <a href="https://bmsce.ac.in/" className="btn-outline" style={{ borderColor: dept.color, color: dept.color }} target="_blank" rel="noreferrer">Alumni Portal</a>
+          <a href="/contact/enquiry" className="btn-primary" style={{ background: dept.color }} target="_blank" rel="noreferrer">Register as Alumni</a>
+          <a href="/alumni" className="btn-outline" style={{ borderColor: dept.color, color: dept.color }} target="_blank" rel="noreferrer">Alumni Portal</a>
         </div>
       </div>
 
