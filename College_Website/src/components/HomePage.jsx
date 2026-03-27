@@ -242,7 +242,7 @@ function AboutSection() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                 </svg>
               </button>
-              <button onClick={() => window.open("https://drive.google.com/file/d/1B0kvjlREBx-NxaexIp8ANqXfyjZCrsW7/view?usp=sharing", "_blank")} className="px-6 py-3 rounded-full border border-white/15 text-white/65 text-sm font-semibold hover:bg-white/5 hover:border-white/25 hover:text-white/90 transition-all duration-300">
+              <button onClick={() => window.open("https://drive.google.com/drive/folders/1kYn26Hn7e8ajqfxYqZ_CgGbqTVbX-WCn?usp=sharing", "_blank")} className="px-6 py-3 rounded-full border border-white/15 text-white/65 text-sm font-semibold hover:bg-white/5 hover:border-white/25 hover:text-white/90 transition-all duration-300">
                 Download Brochure
               </button>
             </motion.div>
