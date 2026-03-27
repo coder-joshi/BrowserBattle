@@ -1,8 +1,81 @@
-import React from "react";
-import { useParams, useNavigate } from "react-router-dom"; // Use hooks
+import React, { useState, useEffect, useRef } from "react";
+import { useParams, useNavigate } from "react-router-dom"; // React Router hooks
 import "../shared.css";
 
 const tabs = ["Overview", "Recruiters", "Statistics", "Register"];
+
+// Hook for animating numbers (kept for your utility)
+function useCountUp(target, duration = 1800, suffix = "") {
+  const [display, setDisplay] = useState("0");
+  const ref = useRef(null);
+  const started = useRef(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !started.current) {
+          started.current = true;
+          const startTime = performance.now();
+          const step = (now) => {
+            const progress = Math.min((now - startTime) / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            const current = Math.round(eased * target);
+            setDisplay(current.toLocaleString("en-IN") + suffix);
+            if (progress < 1) requestAnimationFrame(step);
+          };
+          requestAnimationFrame(step);
+        }
+      },
+      { threshold: 0.3 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [target, duration, suffix]);
+
+  return { ref, display };
+}
+
+// Component for the animated stats in the hero section
+function AnimatedStat({ prefix = "", target, suffix = "", label, decimals = 0 }) {
+  const [display, setDisplay] = useState(prefix + "0" + suffix);
+  const ref = useRef(null);
+  const started = useRef(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !started.current) {
+          started.current = true;
+          const duration = 1800;
+          const startTime = performance.now();
+          const step = (now) => {
+            const progress = Math.min((now - startTime) / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            const current = eased * target;
+            const formatted = decimals > 0 ? current.toFixed(decimals) : Math.round(current).toLocaleString("en-IN");
+            setDisplay(prefix + formatted + suffix);
+            if (progress < 1) requestAnimationFrame(step);
+          };
+          requestAnimationFrame(step);
+        }
+      },
+      { threshold: 0.3 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [target, prefix, suffix, decimals]);
+
+  return (
+    <div className="page-stat" ref={ref}>
+      <span className="page-stat-n" style={{ transition: "all 0.1s" }}>{display}</span>
+      <span className="page-stat-l">{label}</span>
+    </div>
+  );
+}
 
 function PlacementsPage() {
   const { section } = useParams(); // Grabs 'recruiters' from /placements/recruiters
@@ -34,10 +107,11 @@ function PlacementsPage() {
           </p>
         </div>
         <div className="page-header-stats">
-          <div className="page-stat"><span className="page-stat-n">₹51.5L</span><span className="page-stat-l">Highest Package</span></div>
-          <div className="page-stat"><span className="page-stat-n">₹13L</span><span className="page-stat-l">Avg Package</span></div>
-          <div className="page-stat"><span className="page-stat-n">1141+</span><span className="page-stat-l">Offers (2024)</span></div>
-          <div className="page-stat"><span className="page-stat-n">90%+</span><span className="page-stat-l">Placed</span></div>
+          {/* Using your awesome animated stats here! */}
+          <AnimatedStat prefix="₹" target={51.5} suffix="L" label="Highest Package" decimals={1} />
+          <AnimatedStat prefix="₹" target={13} suffix="L" label="Avg Package" decimals={0} />
+          <AnimatedStat target={1141} suffix="+" label="Offers (2024)" />
+          <AnimatedStat target={90} suffix="%+" label="Placed" />
         </div>
       </div>
 
@@ -72,6 +146,11 @@ function PlacementsPage() {
               </div>
             ))}
           </div>
+          <div style={{ padding: "0 2rem 2rem" }}>
+            <div className="highlight-strip">
+              BMSCE is a preferred destination for both core engineering companies and top IT product & service firms, ensuring a diverse range of career opportunities for graduates. Its location in Bengaluru — India's Silicon Valley — gives students direct access to the country's largest tech ecosystem.
+            </div>
+          </div>
         </>
       )}
 
@@ -91,6 +170,21 @@ function PlacementsPage() {
                 ))}
               </div>
             </div>
+          </div>
+          <div className="section-title"><span className="section-line"></span>Sector-Wise<span className="section-line"></span></div>
+          <div className="info-cards-grid">
+            {[
+              { icon: "💻", title: "Information Technology", desc: "Oracle, Atlassian, Adobe, Cohesity, Yahoo!, HP India, IBM, Infosys, Wipro, TCS, Flipkart, Amazon" },
+              { icon: "⚙️", title: "Core Engineering", desc: "L&T, Tata Motors, Bosch, Honeywell, Siemens, Delphi Automotive, Amada India, Total Environment Building Systems" },
+              { icon: "💳", title: "Finance & Banking", desc: "JP Morgan, various fintech companies including Paytm and other banking technology firms" },
+              { icon: "🚀", title: "Defence & Research", desc: "ISRO, DRDO, and other public sector units recruit BMSCE engineers for high-impact national projects" },
+            ].map(c => (
+              <div className="info-card" key={c.title}>
+                <span className="info-card-icon">{c.icon}</span>
+                <div className="info-card-title">{c.title}</div>
+                <p className="info-card-desc">{c.desc}</p>
+              </div>
+            ))}
           </div>
         </>
       )}
@@ -115,6 +209,18 @@ function PlacementsPage() {
                 </tbody>
               </table>
             </div>
+            <div className="content-block" style={{ marginTop: "1.5rem", overflowX: "auto" }}>
+              <h3>NIRF Reported Median Packages</h3>
+              <table className="data-table" style={{ marginTop: "0.75rem" }}>
+                <thead><tr><th>Program</th><th>Median Package</th><th>Source</th></tr></thead>
+                <tbody>
+                  {[
+                    ["B.E. (UG)", "₹8.50 LPA", "NIRF 2025"],
+                    ["M.Tech (PG)", "₹7.20 LPA", "NIRF 2025"],
+                  ].map(r => <tr key={r[0]}><td>{r[0]}</td><td>{r[1]}</td><td>{r[2]}</td></tr>)}
+                </tbody>
+              </table>
+            </div>
           </div>
         </>
       )}
@@ -127,14 +233,19 @@ function PlacementsPage() {
               <div className="content-block">
                 <h3>For Students</h3>
                 <p>Final year and pre-final year students can register with the Training & Placement Cell to participate in campus recruitment drives.</p>
+                <p>Students are advised to keep their resume updated, complete all pre-placement training modules, and maintain a clean CGPA record.</p>
                 <div className="highlight-strip" style={{ marginTop: "1rem" }}>
-                  To register, contact the T&P Cell or visit the Student Portal.
+                  To register, contact the T&P Cell or visit the Student Portal. A valid college email ID is required for registration.
                 </div>
               </div>
               <div className="content-block">
                 <h3>For Recruiters</h3>
-                <p>Companies interested in recruiting BMSCE graduates can reach out to schedule campus placement drives.</p>
+                <p>Companies interested in recruiting BMSCE graduates can reach out to the Training & Placement Cell to schedule campus placement drives, pre-placement talks, or internship programs.</p>
+                <p>BMSCE offers dedicated facilities for written tests, group discussions, and technical/HR interview rounds.</p>
                 <div className="highlight-strip" style={{ marginTop: "1rem" }}>
+                  📍 Training & Placement Cell<br/>
+                  Bull Temple Road, Basavanagudi<br/>
+                  Bengaluru – 560 019<br/>
                   📧 placements@bmsce.ac.in
                 </div>
               </div>

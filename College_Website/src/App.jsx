@@ -6,7 +6,7 @@ import "./pages/departments/departments.css";
 import Navbar from "./layout/Navbar";
 
 // --- PAGES ---
-import HomePage from "./components/HomePage"; // Merged from simpler version
+import HomePage from "./components/HomePage"; // Teammate's custom home page!
 import DepartmentsSection from "./pages/departments/DepartmentsSection";
 import AboutPage from "./pages/about/AboutPage";
 import AdmissionsPage from "./pages/admissions/AdmissionsPage";
@@ -62,6 +62,7 @@ function App() {
         {/* 10. Contact Section (Backend Integrated) */}
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/contact/:section" element={<ContactPage />} />
+        
       </Routes>
     </BrowserRouter>
   );

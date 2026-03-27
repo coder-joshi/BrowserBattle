@@ -70,10 +70,19 @@ const menuItems = [
       { label: "Hostel & Facilities", path: "/campuslife/hostel-facilities" },
     ],
   },
+  {
+    label: "Alumni",
+    path: "/alumni",
+    submenu: [
+      { label: "Network", path: "/alumni/network" },
+      { label: "Events", path: "/alumni/events" },
+      { label: "Donate", path: "/alumni/donate" },
+    ],
+  },
   { label: "Contact", path: "/contact" },
 ];
 
-function DropdownItem({ item, navigate, currentPath, isScrolled }) {
+function DropdownItem({ item, navigate, currentPath, useTransparent }) {
   const [open, setOpen] = useState(false);
   const timeoutRef = useRef(null);
   const dropWidth = item.grid ? 480 : 220;
@@ -100,7 +109,9 @@ function DropdownItem({ item, navigate, currentPath, isScrolled }) {
         className={`px-3 py-2 rounded-md font-semibold text-sm transition-all duration-300 ${
           isActive 
             ? "bg-blue-600 text-white shadow-md" 
-            : isScrolled ? "text-gray-800 hover:bg-gray-100" : "text-white hover:bg-white/20"
+            : useTransparent 
+              ? "text-white hover:bg-white/20" 
+              : "text-gray-800 hover:bg-gray-100"
         }`}
       >
         {item.label}
@@ -134,9 +145,15 @@ function DropdownItem({ item, navigate, currentPath, isScrolled }) {
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
+
+  // Determine if we are on the Home page
+  const isHome = currentPath === "/";
+  // The Navbar is only transparent if we are on the Home page AND haven't scrolled
+  const useTransparent = isHome && !isScrolled;
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -146,18 +163,20 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`fixed top-0 left-0 w-full z-[100] transition-all duration-500 ${
-        isScrolled ? "bg-white shadow-xl py-2" : "bg-transparent py-5"
+      className={`w-full z-[100] transition-all duration-500 ${
+        isHome ? "fixed top-0 left-0" : "sticky top-0"
+      } ${
+        useTransparent ? "bg-transparent py-5" : "bg-white shadow-xl py-2"
       }`}
     >
       <div className={`max-w-7xl mx-auto px-4 flex items-center justify-between transition-colors duration-300 ${
-        isScrolled ? "text-black" : "text-white"
+        useTransparent ? "text-white" : "text-black"
       }`}>
         
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2">
           <span className={`text-2xl font-black tracking-tighter transition-all ${
-            !isScrolled && "drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]"
+            useTransparent && "drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]"
           }`}>
             BMSCE
           </span>
@@ -171,7 +190,7 @@ const Navbar = () => {
               item={item} 
               navigate={navigate} 
               currentPath={currentPath} 
-              isScrolled={isScrolled} 
+              useTransparent={useTransparent} 
             />
           ))}
         </ul>
@@ -181,9 +200,9 @@ const Navbar = () => {
           <Link 
             to="/contact/enquiry" 
             className={`hidden sm:inline-block px-6 py-2 rounded-full font-bold text-sm transition-all duration-300 ${
-              isScrolled 
-                ? "bg-blue-600 text-white hover:bg-blue-700 shadow-lg" 
-                : "bg-white/20 text-white backdrop-blur-md border border-white/30 hover:bg-white hover:text-black"
+              useTransparent 
+                ? "bg-white/20 text-white backdrop-blur-md border border-white/30 hover:bg-white hover:text-black"
+                : "bg-blue-600 text-white hover:bg-blue-700 shadow-lg"
             }`}
           >
             Enquiry
@@ -208,7 +227,7 @@ const Navbar = () => {
       {/* Mobile Drawer (Integrated) */}
       {mobileOpen && (
         <div className="lg:hidden absolute top-full left-0 w-full bg-white shadow-2xl border-t border-gray-100 max-h-[85vh] overflow-y-auto">
-          <div className="p-4">
+          <div className="p-4 text-black">
             {menuItems.map((item) => (
               <div key={item.label} className="mb-2">
                 <button
