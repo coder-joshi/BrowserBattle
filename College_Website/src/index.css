@@ -4,3 +4,16 @@
 body {
   overflow-x: hidden;
 }
+  
+input,
+textarea {
+  color: #111827; /* dark text → visible */
+  background-color: rgba(255, 255, 255, 0.95);
+  caret-color: #2563eb; /* blue cursor */
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #9ca3af; /* gray placeholder */
+}
+
