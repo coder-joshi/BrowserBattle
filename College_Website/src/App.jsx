@@ -16,7 +16,7 @@ import CampusLifePage from "./pages/campuslife/CampusLifePage";
 import StudentsPage from "./pages/students/StudentsPage";
 import AlumniPage from "./pages/alumni/AlumniPage";
 import ContactPage from "./pages/contact/ContactPage"; 
-import Chatbot from "./components/chatbot"; 
+import Chatbot from "./components/SmartChartBot"; 
 import Footer from "./layout/Footer";
 import CommandMenu from "./components/CommandMenu";
 function App() {
