@@ -27,16 +27,20 @@ function ContactPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus("Sending...");
-    
+    console.log(form);
     try {
+      // INSIDE ContactPage.jsx -> handleSubmit function
+
       const response = await fetch("http://localhost:5001/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        // Combine extra fields into the message so the backend accepts it without schema changes
+        // Now sending them as 5 completely separate fields!
         body: JSON.stringify({
           name: form.name,
           email: form.email,
-          message: `Subject: ${form.subject}\nPhone: ${form.phone}\n\nMessage:\n${form.message}`
+          phone: form.phone,
+          subject: form.subject,
+          message: form.message
         }),
       });
       

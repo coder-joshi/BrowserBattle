@@ -19,38 +19,41 @@ mongoose.connect(process.env.MONGO_URI)
   .catch((err) => console.error("❌ MongoDB connection error:", err));
 
 // 2. Create a Schema and Model for the Enquiries
+
+
 const enquirySchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true },
-  message: { type: String, required: true },
-  date: { type: Date, default: Date.now }
+    name: { type: String, required: true },
+    email: { type: String, required: true },
+    phone: { type: String },    // <-- ADD THIS
+    subject: { type: String },  // <-- ADD THIS
+    message: { type: String, required: true },
+    date: { type: Date, default: Date.now }
 });
 
-const Enquiry = mongoose.model("Enquiry", enquirySchema);
+const Enquiry = mongoose.model('Enquiry', enquirySchema);
 
 // 3. POST Route to handle incoming contact form submissions
-app.post("/api/contact", async (req, res) => {
-  try {
-    const { name, email, message } = req.body;
+// INSIDE YOUR BACKEND server.js
 
-    // Basic validation
-    if (!name || !email || !message) {
-      return res.status(400).json({ error: "All fields are required" });
+app.post('/api/contact', async (req, res) => {
+    try {
+        // Extract all 5 fields from the request body
+        const { name, email, phone, subject, message } = req.body;
+
+        // Create a new database entry with all 5 fields
+        const newContact = new Contact({
+            name,
+            email,
+            phone,      // <-- Make sure this is here
+            subject,    // <-- Make sure this is here
+            message
+        });
+
+        await newContact.save();
+        res.status(201).json({ message: "Message sent successfully!" });
+    } catch (error) {
+        res.status(500).json({ error: "Failed to send message." });
     }
-
-    // Create and save the new enquiry to the database
-    const newEnquiry = new Enquiry({ name, email, message });
-    await newEnquiry.save();
-
-    console.log("New Enquiry Saved to Database:", newEnquiry);
-
-    // Send success response to frontend
-    res.status(201).json({ success: true, message: "Enquiry sent successfully!" });
-
-  } catch (error) {
-    console.error("Server error saving enquiry:", error);
-    res.status(500).json({ error: "Internal server error. Please try again later." });
-  }
 });
 
 // Start Server
