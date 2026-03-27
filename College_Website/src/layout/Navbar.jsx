@@ -1,5 +1,3 @@
-
-
 import React, { useState, useRef, useEffect } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 
@@ -157,9 +155,7 @@ const Navbar = () => {
   const location = useLocation();
   const currentPath = location.pathname;
 
-  // Determine if we are on the Home page
   const isHome = currentPath === "/";
-  // The Navbar is only transparent if we are on the Home page AND haven't scrolled
   const useTransparent = isHome && !isScrolled;
 
   useEffect(() => {
@@ -167,6 +163,11 @@ const Navbar = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Simulates the keyboard shortcut to open the Command Menu if the button is clicked manually
+  const triggerCommandMenu = () => {
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }));
+  };
 
   return (
     <nav
@@ -203,21 +204,40 @@ const Navbar = () => {
           ))}
         </ul>
 
-        {/* Action Button */}
-        <div className="flex items-center gap-4">
+        {/* Action Button & CMD+K Hint */}
+        <div className="flex items-center gap-3">
+          
+          {/* CMD+K Hint Button */}
+          <button
+            onClick={triggerCommandMenu}
+            className={`hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-300 ${
+              useTransparent
+                ? "bg-white/10 hover:bg-white/20 text-white/80 border border-white/20"
+                : "bg-gray-100 hover:bg-gray-200 text-gray-500 border border-gray-200"
+            }`}
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+            <span className="hidden xl:inline-block">Search...</span>
+            <div className={`flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-bold tracking-widest ml-1 ${
+              useTransparent ? "bg-white/20 text-white" : "bg-white border border-gray-300 text-gray-500"
+            }`}>
+              <span className="text-[12px] leading-none">⌘</span>K
+            </div>
+          </button>
+
           {location.pathname === "/" ? (
-            <>
-              <Link
-                to="/contact/enquiry"
-                className={`hidden sm:inline-block px-6 py-2 rounded-full font-bold text-sm transition-all duration-300 ${
-                  useTransparent
-                    ? "bg-white/20 text-white backdrop-blur-md border border-white/30 hover:bg-white hover:text-black"
-                    : "bg-blue-600 text-white hover:bg-blue-700 shadow-lg"
-                }`}
-              >
-                Enquiry
-              </Link>
-            </>
+            <Link
+              to="/contact/enquiry"
+              className={`hidden sm:inline-block px-6 py-2 rounded-full font-bold text-sm transition-all duration-300 ${
+                useTransparent
+                  ? "bg-white/20 text-white backdrop-blur-md border border-white/30 hover:bg-white hover:text-black"
+                  : "bg-blue-600 text-white hover:bg-blue-700 shadow-lg"
+              }`}
+            >
+              Enquiry
+            </Link>
           ) : (
             <Link to="/" className="hidden sm:inline-block">
               <img
@@ -240,19 +260,9 @@ const Navbar = () => {
               viewBox="0 0 24 24"
             >
               {mobileOpen ? (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M6 18L18 6M6 6l12 12"
-                />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
               ) : (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 6h16M4 12h16m-7 6h7"
-                />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" />
               )}
             </svg>
           </button>

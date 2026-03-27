@@ -18,14 +18,17 @@ import AlumniPage from "./pages/alumni/AlumniPage";
 import ContactPage from "./pages/contact/ContactPage"; 
 import Chatbot from "./components/chatbot"; 
 import Footer from "./layout/Footer";
-
+import CommandMenu from "./components/CommandMenu";
 function App() {
+  
   return (
+    
     <BrowserRouter>
       {/* Global Navbar */}
+      
       <Navbar />
       <Chatbot />
-      
+      <CommandMenu />
       <Routes>
         {/* 1. Home Route */}
         <Route path="/" element={<HomePage />} />

@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Alumni from "../components/Alumni";
 import Companies from "./Companies";
 
+
 import { animate, motion, useMotionValue, useTransform, useInView } from "framer-motion";
 import { useEffect, useRef } from "react";
 
@@ -338,6 +339,7 @@ function HomePage() {
   return (
     <>
       {/* HERO */}
+      
       <section className="relative w-full min-h-[92vh] overflow-hidden">
         <video className="absolute top-0 left-0 w-full h-full object-cover" autoPlay muted loop playsInline>
           <source src="/homevideo.mp4" type="video/mp4" />
@@ -426,7 +428,9 @@ function HomePage() {
       </section>
 
       {/* ABOUT + ALUMNI — unified dark section */}
-      <AboutSection />
+      
+        <AboutSection />
+     
 
       {/* COMPANIES */}
       {/* <Companies /> */}
