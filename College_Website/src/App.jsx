@@ -17,6 +17,7 @@ import StudentsPage from "./pages/students/StudentsPage";
 import AlumniPage from "./pages/alumni/AlumniPage";
 import ContactPage from "./pages/contact/ContactPage"; 
 import Chatbot from "./components/chatbot"; 
+import Footer from "./layout/Footer";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
       {/* Global Navbar */}
       <Navbar />
       <Chatbot />
+      
       <Routes>
         {/* 1. Home Route */}
         <Route path="/" element={<HomePage />} />
@@ -65,6 +67,7 @@ function App() {
         <Route path="/contact/:section" element={<ContactPage />} />
 
       </Routes>
+      <Footer />
     </BrowserRouter>
   );
 }

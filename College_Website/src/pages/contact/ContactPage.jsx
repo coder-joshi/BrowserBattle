@@ -11,30 +11,26 @@ function ContactPage() {
   const { section } = useParams();
   const navigate = useNavigate();
 
-  // Active tab setup
+  // Active tab setup based on URL slug
   const activeTab = tabs.find((t) => toSlug(t) === section?.toLowerCase()) || "Address & Map";
 
   const handleTabClick = (t) => {
     navigate(`/contact/${toSlug(t)}`);
   };
 
-  // --- Backend Integration State ---
+  // --- Backend & Form State ---
   const [form, setForm] = useState({ name: "", email: "", phone: "", subject: "", message: "" });
   const [status, setStatus] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
-  // --- Form Submission Logic ---
+  // --- Form Submission Logic (Connected to Render) ---
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus("Sending...");
-    console.log(form);
     try {
-      // INSIDE ContactPage.jsx -> handleSubmit function
-
       const response = await fetch("https://bmsce-portal-backend.onrender.com/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        // Now sending them as 5 completely separate fields!
         body: JSON.stringify({
           name: form.name,
           email: form.email,
@@ -51,7 +47,7 @@ function ContactPage() {
         setForm({ name: "", email: "", phone: "", subject: "", message: "" });
         setStatus("");
       } else {
-        setStatus("Failed to send: " + data.error);
+        setStatus("Failed to send: " + (data.error || "Server error"));
       }
     } catch (error) {
       console.error("Error:", error);
@@ -95,20 +91,19 @@ function ContactPage() {
           <div className="two-col" style={{ padding: "0 2rem 2rem" }}>
             <div className="content-block">
               <h3>Campus Address</h3>
-              <div style={{ display: "flex", flexDirection: "column", gap: "1rem", marginTop: "0.5rem" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "1.1rem", marginTop: "0.5rem" }}>
                 {[
                   { icon: "📍", label: "Address", value: "Bull Temple Road, Basavanagudi, Bengaluru, Karnataka – 560 019" },
                   { icon: "📞", label: "Phone", value: "+91-80-26622130 / 26622131" },
                   { icon: "📠", label: "Fax", value: "+91-80-26614357" },
                   { icon: "📧", label: "Email", value: "principal@bmsce.ac.in" },
-                  { icon: "🌐", label: "Website", value: "www.bmsce.ac.in" },
-                  { icon: "🕘", label: "Office Hours", value: "Monday – Saturday, 9:00 AM – 5:00 PM" },
+                  { icon: "🕘", label: "Office Hours", value: "Mon – Sat, 9:00 AM – 5:00 PM" },
                 ].map(i => (
-                  <div key={i.label} style={{ display: "flex", gap: "0.75rem", alignItems: "flex-start" }}>
+                  <div key={i.label} style={{ display: "flex", gap: "0.8rem", alignItems: "flex-start" }}>
                     <span style={{ fontSize: "1.2rem", flexShrink: 0 }}>{i.icon}</span>
                     <div>
-                      <div style={{ fontSize: "0.72rem", fontWeight: 700, color: "#1565c0", textTransform: "uppercase", letterSpacing: "0.05em" }}>{i.label}</div>
-                      <div style={{ fontSize: "0.9rem", color: "#333", marginTop: "0.1rem" }}>{i.value}</div>
+                      <div style={{ fontSize: "0.68rem", fontWeight: 800, color: "#1565c0", textTransform: "uppercase", letterSpacing: "0.08em" }}>{i.label}</div>
+                      <div style={{ fontSize: "0.88rem", color: "#374151", lineHeight: 1.55 }}>{i.value}</div>
                     </div>
                   </div>
                 ))}
@@ -116,18 +111,18 @@ function ContactPage() {
             </div>
             <div className="content-block">
               <h3>How to Reach Us</h3>
-              <div style={{ display: "flex", flexDirection: "column", gap: "1rem", marginTop: "0.5rem" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "1.1rem", marginTop: "0.5rem" }}>
                 {[
-                  { icon: "🚇", title: "By Metro", desc: "Nearest metro station: South End Circle (Purple Line). 10-minute walk to BMSCE campus from the station exit." },
-                  { icon: "🚌", title: "By Bus", desc: "BMTC buses 37E, 201, 201C, 201M, and several others stop at Bull Temple Road / BMS College stop." },
-                  { icon: "🚂", title: "By Train", desc: "About 5 km from KSR Bengaluru City Railway Station. Take an auto-rickshaw or cab to Bull Temple Road, Basavanagudi." },
-                  { icon: "✈️", title: "By Air", desc: "Approximately 40 km from Kempegowda International Airport. Cabs and Vayu Vajra Airport buses connect to the city centre." },
+                  { icon: "🚇", title: "By Metro", desc: "Nearest: South End Circle (Purple Line). 10-min walk to campus." },
+                  { icon: "🚌", title: "By Bus", desc: "BMTC routes 37E, 201, 201C stop at Bull Temple Road / BMS College." },
+                  { icon: "🚂", title: "By Train", desc: "5 km from KSR Bengaluru City Station. Cabs/Autos available." },
+                  { icon: "✈️", title: "By Air", desc: "40 km from Kempegowda Intl Airport. Vayu Vajra buses available." },
                 ].map(m => (
-                  <div key={m.title} style={{ display: "flex", gap: "0.75rem" }}>
+                  <div key={m.title} style={{ display: "flex", gap: "0.8rem" }}>
                     <span style={{ fontSize: "1.3rem", flexShrink: 0 }}>{m.icon}</span>
                     <div>
-                      <div style={{ fontSize: "0.875rem", fontWeight: 700, color: "#1a1a2e" }}>{m.title}</div>
-                      <div style={{ fontSize: "0.82rem", color: "#555", lineHeight: 1.6, marginTop: "0.15rem" }}>{m.desc}</div>
+                      <div style={{ fontSize: "0.875rem", fontWeight: 800, color: "#1a1a2e" }}>{m.title}</div>
+                      <div style={{ fontSize: "0.82rem", color: "#5a6478", lineHeight: 1.62 }}>{m.desc}</div>
                     </div>
                   </div>
                 ))}
@@ -135,16 +130,15 @@ function ContactPage() {
             </div>
           </div>
           <div style={{ padding: "0 2rem 2rem" }}>
-            <div style={{ background: "white", borderRadius: "14px", border: "1px solid #e8edf5", overflow: "hidden", height: "360px", boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
+            <div style={{ background: "white", borderRadius: "18px", border: "1px solid #e0e9f5", overflow: "hidden", height: "400px", boxShadow: "0 4px 20px rgba(21,101,192,0.08)" }}>
               <iframe
                 title="BMSCE Location"
                 width="100%"
-                height="360"
-                style={{ border: "none", display: "block" }}
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3888.6075186657247!2d77.56523697516897!3d12.942783987366396!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae15f1a0d4a2b7%3A0x7b82f5e9e96f98d8!2sBMS%20College%20of%20Engineering!5e0!3m2!1sen!2sin!4v1711538400000!5m2!1sen!2sin"
+                height="100%"
+                style={{ border: "none" }}
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m12!1m3!1d3888.38423405391!2d77.56333331526685!3d12.942222218931185!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae1591f1b33945%3A0xc6660d191ae36eb8!2sBMS%20College%20of%20Engineering!5e0!3m2!1sen!2sin!4v1615967894562!5m2!1sen!2sin"
                 allowFullScreen
                 loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
               />
             </div>
           </div>
@@ -152,90 +146,84 @@ function ContactPage() {
       )}
 
       {activeTab === "Enquiry" && (
-        <>
+        <div className="animate-in fade-in duration-500">
           <div className="section-title"><span className="section-line"></span>Send an Enquiry<span className="section-line"></span></div>
-          <div style={{ padding: "0 2rem 3rem" }}>
+          <div style={{ padding: "0 2.5rem 3.5rem" }}>
             {submitted ? (
-              <div className="content-block" style={{ textAlign: "center", padding: "3rem 2rem" }}>
-                <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>✅</div>
-                <h3 style={{ fontSize: "1.25rem", color: "#1565c0" }}>Message Sent!</h3>
-                <p style={{ color: "#555", marginTop: "0.5rem" }}>Thank you for reaching out. Our team will respond within 2–3 working days.</p>
-                <button onClick={() => setSubmitted(false)} style={{ marginTop: "1.5rem", background: "#1565c0", color: "white", border: "none", borderRadius: "8px", padding: "0.7rem 1.5rem", fontWeight: 700, cursor: "pointer" }}>Send Another</button>
+              <div className="content-block" style={{ textAlign: "center", padding: "3.5rem 2rem", maxWidth: 540, margin: "0 auto" }}>
+                <div style={{ fontSize: "3.5rem", marginBottom: "1.1rem" }}>✅</div>
+                <h3 style={{ fontSize: "1.3rem", color: "#1565c0" }}>Message Sent!</h3>
+                <p style={{ color: "#555" }}>Our team will respond within 2–3 working days.</p>
+                <button onClick={() => setSubmitted(false)} style={{ marginTop: "1.75rem", background: "#1565c0", color: "white", border: "none", borderRadius: "10px", padding: "0.75rem 1.75rem", fontWeight: 700, cursor: "pointer" }}>Send Another</button>
               </div>
             ) : (
-              <div className="content-block" style={{ maxWidth: "640px" }}>
+              <div className="content-block" style={{ maxWidth: "660px", margin: "0 auto" }}>
                 <h3>Contact Form</h3>
-                <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1rem", marginTop: "1rem" }}>
-                  {[
-                    { id: "name", label: "Full Name", type: "text", placeholder: "Your full name" },
-                    { id: "email", label: "Email Address", type: "email", placeholder: "your@email.com" },
-                    { id: "phone", label: "Phone Number", type: "tel", placeholder: "+91 XXXXXXXXXX" },
-                    { id: "subject", label: "Subject", type: "text", placeholder: "Enquiry subject" },
-                  ].map(f => (
-                    <div key={f.id}>
-                      <label style={{ fontSize: "0.8rem", fontWeight: 700, color: "#1565c0", display: "block", marginBottom: "0.35rem" }}>{f.label}</label>
-                      <input
-                        type={f.type}
-                        placeholder={f.placeholder}
-                        value={form[f.id]}
-                        onChange={e => setForm(p => ({ ...p, [f.id]: e.target.value }))}
-                        required={f.id !== "phone"} // Made phone optional, name/email/subject required
-                        style={{ width: "100%", padding: "0.65rem 0.85rem", border: "1.5px solid #d8e3f0", borderRadius: "8px", fontSize: "0.875rem", outline: "none", boxSizing: "border-box" }}
-                      />
+                <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1.1rem", marginTop: "1rem" }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.1rem" }}>
+                    <div>
+                      <label className="form-label">Full Name</label>
+                      <input type="text" placeholder="Your Name" value={form.name} onChange={e => setForm({...form, name: e.target.value})} required className="form-input" />
                     </div>
-                  ))}
+                    <div>
+                      <label className="form-label">Email Address</label>
+                      <input type="email" placeholder="email@example.com" value={form.email} onChange={e => setForm({...form, email: e.target.value})} required className="form-input" />
+                    </div>
+                  </div>
                   <div>
-                    <label style={{ fontSize: "0.8rem", fontWeight: 700, color: "#1565c0", display: "block", marginBottom: "0.35rem" }}>Message</label>
-                    <textarea
-                      placeholder="Write your message here..."
-                      value={form.message}
-                      onChange={e => setForm(p => ({ ...p, message: e.target.value }))}
-                      required
-                      rows={5}
-                      style={{ width: "100%", padding: "0.65rem 0.85rem", border: "1.5px solid #d8e3f0", borderRadius: "8px", fontSize: "0.875rem", outline: "none", resize: "vertical", boxSizing: "border-box" }}
-                    />
+                    <label className="form-label">Phone Number</label>
+                    <input type="tel" placeholder="+91 XXXXXXXXXX" value={form.phone} onChange={e => setForm({...form, phone: e.target.value})} className="form-input" />
+                  </div>
+                  <div>
+                    <label className="form-label">Subject</label>
+                    <input type="text" placeholder="Enquiry Subject" value={form.subject} onChange={e => setForm({...form, subject: e.target.value})} required className="form-input" />
+                  </div>
+                  <div>
+                    <label className="form-label">Message</label>
+                    <textarea placeholder="Write your message..." value={form.message} onChange={e => setForm({...form, message: e.target.value})} required rows={5} className="form-input" style={{resize: "vertical"}} />
                   </div>
                   
-                  {/* Status Error Display */}
-                  {status && !status.includes("Sending") && (
-                    <p style={{ color: "red", fontSize: "0.9rem", margin: "0" }}>{status}</p>
-                  )}
+                  {status && <p style={{ color: status.includes("Sending") ? "#1565c0" : "red", fontSize: "0.9rem" }}>{status}</p>}
 
-                  <button type="submit" disabled={status === "Sending..."} style={{ background: status === "Sending..." ? "#888" : "#1565c0", color: "white", border: "none", borderRadius: "8px", padding: "0.8rem 1.75rem", fontWeight: 700, fontSize: "0.95rem", cursor: status === "Sending..." ? "not-allowed" : "pointer", alignSelf: "flex-start", transition: "background 0.15s" }}>
-                    {status === "Sending..." ? "Sending..." : "Send Message →"}
+                  <button type="submit" disabled={status.includes("Sending")} style={{ background: status.includes("Sending") ? "#888" : "#1565c0", color: "white", border: "none", borderRadius: "10px", padding: "0.85rem 2.5rem", fontWeight: 800, cursor: "pointer", transition: "all 0.2s" }}>
+                    {status.includes("Sending") ? "Sending..." : "Send Message →"}
                   </button>
                 </form>
               </div>
             )}
           </div>
-        </>
+        </div>
       )}
 
       {activeTab === "Key Contacts" && (
-        <>
-          <div className="section-title"><span className="section-line"></span>Department Contacts<span className="section-line"></span></div>
+        <div className="animate-in fade-in duration-500">
+          <div className="section-title"><span className="section-line"></span>Key Contacts<span className="section-line"></span></div>
           <div className="info-cards-grid">
             {[
               { icon: "🏫", title: "Principal's Office", email: "principal@bmsce.ac.in", phone: "+91-80-26622130" },
               { icon: "📋", title: "Admissions Office", email: "admissions@bmsce.ac.in", phone: "+91-80-26622131" },
-              { icon: "💼", title: "Training & Placement Cell", email: "placements@bmsce.ac.in", phone: "Contact via college" },
+              { icon: "💼", title: "Training & Placement", email: "placements@bmsce.ac.in", phone: "+91-80-26622132" },
               { icon: "🔬", title: "Research Cell", email: "research@bmsce.ac.in", phone: "Contact via college" },
-              { icon: "👨‍🎓", title: "Student Welfare", email: "studentwelfare@bmsce.ac.in", phone: "Contact via college" },
-              { icon: "🎓", title: "Alumni Office", email: "alumni@bmsce.ac.in", phone: "Contact via college" },
-              { icon: "📚", title: "Central Library", email: "library@bmsce.ac.in", phone: "Contact via college" },
-              { icon: "💻", title: "IT Helpdesk", email: "ithelpdesk@bmsce.ac.in", phone: "Contact via college" },
             ].map(c => (
               <div className="info-card" key={c.title}>
                 <span className="info-card-icon">{c.icon}</span>
                 <div className="info-card-title">{c.title}</div>
-                <p className="info-card-desc" style={{ marginTop: "0.35rem" }}>
-                  📧 {c.email}<br/>📞 {c.phone}
+                <p className="info-card-desc" style={{ marginTop: "0.5rem" }}>
+                  📧 <a href={`mailto:${c.email}`} style={{ color: "#1565c0", textDecoration: "none" }}>{c.email}</a><br/>
+                  📞 {c.phone}
                 </p>
               </div>
             ))}
           </div>
-        </>
+        </div>
       )}
+      
+      {/* Internal CSS for the Form */}
+      <style>{`
+        .form-label { font-size: 0.75rem; font-weight: 800; color: #1565c0; display: block; margin-bottom: 0.4rem; letter-spacing: 0.04em; text-transform: uppercase; }
+        .form-input { width: 100%; padding: 0.75rem 1rem; border: 1.5px solid #dce6f5; border-radius: 10px; font-size: 0.9rem; outline: none; box-sizing: border-box; transition: border-color 0.2s; }
+        .form-input:focus { border-color: #1565c0; }
+      `}</style>
     </div>
   );
 }
