@@ -1,7 +1,7 @@
 
 import React from "react";
 import PlacementValue from "./PlacementValue";
-
+import { useNavigate } from "react-router-dom";
 import Alumni from "../components/Alumni";
 import Companies from "./Companies";
 
@@ -64,6 +64,7 @@ const milestones = [
 
 /* ─────────────────── About Section ─────────────────── */
 function AboutSection() {
+  const navigate = useNavigate();
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
@@ -236,13 +237,13 @@ function AboutSection() {
               transition={{ duration: 0.5, delay: 0.9 }}
               className="flex flex-wrap gap-3"
             >
-              <button className="group flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-blue-600 to-blue-700 text-white text-sm font-bold shadow-lg hover:shadow-blue-500/30 hover:scale-[1.03] transition-all duration-300">
+              <button onClick={() => navigate("/departments")}  className="group flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-blue-600 to-blue-700 text-white text-sm font-bold shadow-lg hover:shadow-blue-500/30 hover:scale-[1.03] transition-all duration-300">
                 Explore All Programs
                 <svg className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                 </svg>
               </button>
-              <button className="px-6 py-3 rounded-full border border-white/15 text-white/65 text-sm font-semibold hover:bg-white/5 hover:border-white/25 hover:text-white/90 transition-all duration-300">
+              <button onClick={() => window.open("https://drive.google.com/file/d/1B0kvjlREBx-NxaexIp8ANqXfyjZCrsW7/view?usp=sharing", "_blank")} className="px-6 py-3 rounded-full border border-white/15 text-white/65 text-sm font-semibold hover:bg-white/5 hover:border-white/25 hover:text-white/90 transition-all duration-300">
                 Download Brochure
               </button>
             </motion.div>
@@ -333,6 +334,7 @@ function AlumniSection() {
 
 /* ─────────────────── Main HomePage ─────────────────── */
 function HomePage() {
+  const navigate = useNavigate();
   return (
     <>
       {/* HERO */}
@@ -362,9 +364,9 @@ function HomePage() {
                 A legacy of excellence with modern, industry-aligned learning — backed by strong outcomes in internships and placements.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
-                <button className="bg-gradient-to-r from-blue-600 to-blue-800 text-white px-6 py-3 rounded-full font-bold transition shadow-lg hover:opacity-90">Explore Programs</button>
-                <button className="border border-blue-400/40 bg-blue-500/10 px-6 py-3 rounded-full font-bold transition backdrop-blur hover:bg-blue-500/20">Placement Highlights</button>
-                <button className="border border-blue-400/20 hover:bg-blue-500/10 px-6 py-3 rounded-full font-semibold transition">Campus Tour</button>
+                <button onClick={() => navigate("/departments")}  className="bg-gradient-to-r from-blue-600 to-blue-800 text-white px-6 py-3 rounded-full font-bold transition shadow-lg hover:opacity-90">Explore Programs</button>
+                <button onClick={() => navigate("/placements")} className="border border-blue-400/40 bg-blue-500/10 px-6 py-3 rounded-full font-bold transition backdrop-blur hover:bg-blue-500/20">Placement Highlights</button>
+                <button onClick={() => navigate("/campuslife")} className="border border-blue-400/20 hover:bg-blue-500/10 px-6 py-3 rounded-full font-semibold transition">Campus Tour</button>
               </div>
             </div>
 

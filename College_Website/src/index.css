@@ -1,10 +1,12 @@
+
+
 @import "tailwindcss";
 @plugin "daisyui";
 
 body {
   overflow-x: hidden;
 }
-  
+
 input,
 textarea {
   color: #111827; /* dark text → visible */
@@ -17,3 +19,7 @@ textarea::placeholder {
   color: #9ca3af; /* gray placeholder */
 }
 
+button,
+a {
+  cursor: pointer;
+}
