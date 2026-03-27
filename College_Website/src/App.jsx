@@ -16,13 +16,14 @@ import CampusLifePage from "./pages/campuslife/CampusLifePage";
 import StudentsPage from "./pages/students/StudentsPage";
 import AlumniPage from "./pages/alumni/AlumniPage";
 import ContactPage from "./pages/contact/ContactPage"; 
+import Chatbot from "./components/chatbot"; 
 
 function App() {
   return (
     <BrowserRouter>
       {/* Global Navbar */}
       <Navbar />
-      
+      <Chatbot />
       <Routes>
         {/* 1. Home Route */}
         <Route path="/" element={<HomePage />} />
@@ -62,7 +63,7 @@ function App() {
         {/* 10. Contact Section (Backend Integrated) */}
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/contact/:section" element={<ContactPage />} />
-        
+
       </Routes>
     </BrowserRouter>
   );
