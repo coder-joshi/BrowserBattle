@@ -1,6 +1,141 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom"; // Use these instead of useLocation
 import "../shared.css";
+
+const historyEvents = [
+  { year: "1946", title: "Foundation", icon: "🏛️", desc: "Bhusanayana Mukundadas Sreenivasaiah founds BMSCE — India's first private engineering college — starting with just 3 undergraduate programs." },
+  { year: "1960s", title: "Expansion", icon: "📐", desc: "Introduction of new departments in Electrical Engineering, Mechanical Engineering, and Civil Engineering to meet growing industrial demand." },
+  { year: "1973", title: "Utsav Festival", icon: "🎉", desc: "The first edition of Utsav, BMSCE's cultural festival, is launched by students. It grows into one of Bengaluru's most anticipated annual events." },
+  { year: "2008", title: "Autonomous Status", icon: "📜", desc: "VTU grants BMSCE autonomous status, enabling the college to design its own curriculum and adopt outcome-based education — a first in Karnataka." },
+  { year: "2010", title: "NBA Tier-I Accreditation", icon: "🏅", desc: "BMSCE becomes the first institution in Karnataka to receive NBA accreditation in the prestigious Tier-I format." },
+  { year: "2020", title: "NAAC A++ Grade", icon: "⭐", desc: "The National Assessment and Accreditation Council awards BMSCE the highest 'A++' grade with a CGPA of 3.83/4.0." },
+  { year: "2024", title: "NIRF Recognition", icon: "🏆", desc: "Ranked in the 101–150 band by NIRF 2024 (Engineering category), cementing BMSCE's place among India's premier institutions." },
+  { year: "2026", title: "Continuing Excellence", icon: "🚀", desc: "Admissions open for 2026–27 with expanded programs in AI, ML, Data Science, and IoT, keeping pace with tomorrow's tech landscape." },
+];
+
+function HistoryTimeline() {
+  const itemsRef = useRef([]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("vt-item--visible");
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+    itemsRef.current.forEach((el) => { if (el) observer.observe(el); });
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <>
+      <style>{`
+        .vt-section { padding: 2.5rem 1.5rem 4rem; background: #f8faff; }
+        .vt-header { text-align: center; max-width: 600px; margin: 0 auto 3.5rem; }
+        .vt-label { display: inline-block; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.2em; color: #1565c0; text-transform: uppercase; margin-bottom: 0.6rem; }
+        .vt-heading { font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 800; color: #0f172a; margin: 0 0 0.75rem; line-height: 1.15; }
+        .vt-sub { color: #64748b; font-size: 0.95rem; line-height: 1.7; margin: 0; }
+
+        .vt-wrap { position: relative; max-width: 820px; margin: 0 auto; }
+        .vt-spine {
+          position: absolute; left: 50%; top: 0; bottom: 0;
+          width: 3px; transform: translateX(-50%);
+          background: linear-gradient(to bottom, #1565c0, #90caf9 80%, transparent);
+          border-radius: 2px;
+        }
+
+        .vt-item {
+          position: relative; width: 44%; margin-bottom: 3rem;
+          opacity: 0; transition: opacity 0.55s ease, transform 0.55s ease;
+        }
+        .vt-item--left  { left: 0;    transform: translateX(-36px); text-align: right; }
+        .vt-item--right { left: 56%;  transform: translateX(36px);  text-align: left; }
+        .vt-item--visible { opacity: 1; transform: translateX(0); }
+
+        .vt-item:nth-child(2) { transition-delay: 0.05s; }
+        .vt-item:nth-child(3) { transition-delay: 0.10s; }
+        .vt-item:nth-child(4) { transition-delay: 0.15s; }
+        .vt-item:nth-child(5) { transition-delay: 0.20s; }
+        .vt-item:nth-child(6) { transition-delay: 0.25s; }
+        .vt-item:nth-child(7) { transition-delay: 0.30s; }
+        .vt-item:nth-child(8) { transition-delay: 0.35s; }
+        .vt-item:nth-child(9) { transition-delay: 0.40s; }
+
+        .vt-dot {
+          position: absolute; top: 18px;
+          width: 20px; height: 20px;
+          background: #fff; border: 3px solid #1565c0;
+          border-radius: 50%; display: flex; align-items: center; justify-content: center;
+          box-shadow: 0 0 0 4px #e3eeff; z-index: 1;
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .vt-item:hover .vt-dot {
+          transform: scale(1.2);
+          box-shadow: 0 0 0 6px #c7deff;
+        }
+        .vt-item--left  .vt-dot { right: -11%; }
+        .vt-item--right .vt-dot { left:  -11%; }
+        .vt-dot-inner { width: 7px; height: 7px; background: #1565c0; border-radius: 50%; }
+
+        .vt-card {
+          background: #fff; border: 1px solid #e2e8f0;
+          border-radius: 14px; padding: 1.25rem 1.5rem;
+          box-shadow: 0 4px 18px rgba(21,101,192,0.07);
+          transition: box-shadow 0.3s ease, transform 0.3s ease;
+        }
+        .vt-card:hover { box-shadow: 0 8px 32px rgba(21,101,192,0.14); transform: translateY(-3px); }
+
+        .vt-icon { font-size: 1.5rem; margin-bottom: 0.4rem; display: block; }
+        .vt-year {
+          display: inline-block; font-size: 0.68rem; font-weight: 700;
+          letter-spacing: 0.12em; color: #1565c0; text-transform: uppercase;
+          background: #eff6ff; border-radius: 999px; padding: 2px 10px; margin-bottom: 0.4rem;
+        }
+        .vt-title { font-size: 1rem; font-weight: 700; color: #0f172a; margin: 0 0 0.4rem; }
+        .vt-desc  { font-size: 0.84rem; color: #475569; line-height: 1.7; margin: 0; }
+
+        @media (max-width: 680px) {
+          .vt-spine { left: 18px; }
+          .vt-item { width: calc(100% - 48px) !important; left: 48px !important; text-align: left !important; transform: translateX(24px) !important; }
+          .vt-item--visible { transform: translateX(0) !important; }
+          .vt-dot { left: -38px !important; right: auto !important; }
+          .vt-section { padding: 2rem 1rem 3rem; }
+        }
+      `}</style>
+
+      <div className="vt-section">
+        <div className="vt-header">
+          <span className="vt-label">Our Journey</span>
+          <h2 className="vt-heading">A Legacy of 78+ Years</h2>
+          <p className="vt-sub">From a humble start with 3 programs to one of India's top engineering institutions — every milestone tells our story.</p>
+        </div>
+
+        <div className="vt-wrap">
+          <div className="vt-spine" />
+          {historyEvents.map((e, i) => (
+            <div
+              key={e.year}
+              className={`vt-item ${i % 2 === 0 ? "vt-item--left" : "vt-item--right"}`}
+              ref={(el) => (itemsRef.current[i] = el)}
+            >
+              <div className="vt-dot"><div className="vt-dot-inner" /></div>
+              <div className="vt-card">
+                <span className="vt-icon">{e.icon}</span>
+                <span className="vt-year">{e.year}</span>
+                <h3 className="vt-title">{e.title}</h3>
+                <p className="vt-desc">{e.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
+  );
+}
 
 const tabs = ["Overview", "History", "Leadership", "Accreditation", "Achievements"];
 
@@ -99,34 +234,7 @@ function AboutPage() {
       )}
 
       {/* History */}
-      {activeTab === "History" && (
-        <>
-          <div className="section-title"><span className="section-line"></span>Our Journey<span className="section-line"></span></div>
-          <div style={{ padding: "0 2rem 3rem" }}>
-            <div className="content-block">
-              <h3>A Legacy of 78+ Years</h3>
-              <div className="timeline" style={{ marginTop: "1.5rem" }}>
-                {[
-                  { year: "1946", title: "Foundation", desc: "Bhusanayana Mukundadas Sreenivasaiah founds BMSCE — India's first private engineering college — starting with just 3 undergraduate programs." },
-                  { year: "1960s", title: "Expansion", desc: "Introduction of new departments in Electrical Engineering, Mechanical Engineering, and Civil Engineering to meet growing industrial demand." },
-                  { year: "1973", title: "Utsav Festival", desc: "The first edition of Utsav, BMSCE's cultural festival, is launched by students. It grows into one of Bengaluru's most anticipated annual events." },
-                  { year: "2008", title: "Autonomous Status", desc: "VTU grants BMSCE autonomous status, enabling the college to design its own curriculum and adopt outcome-based education — a first in Karnataka." },
-                  { year: "2010", title: "NBA Tier-I Accreditation", desc: "BMSCE becomes the first institution in Karnataka to receive NBA accreditation in the prestigious Tier-I format." },
-                  { year: "2020", title: "NAAC A++ Grade", desc: "The National Assessment and Accreditation Council awards BMSCE the highest 'A++' grade with a CGPA of 3.83/4.0." },
-                  { year: "2024", title: "NIRF Recognition", desc: "Ranked in the 101–150 band by NIRF 2024 (Engineering category), cementing BMSCE's place among India's premier institutions." },
-                  { year: "2026", title: "Continuing Excellence", desc: "Admissions open for 2026–27 with expanded programs in AI, ML, Data Science, and IoT, keeping pace with tomorrow's tech landscape." },
-                ].map(e => (
-                  <div className="timeline-item" key={e.year}>
-                    <div className="timeline-year">{e.year}</div>
-                    <div className="timeline-title">{e.title}</div>
-                    <div className="timeline-desc">{e.desc}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </>
-      )}
+      {activeTab === "History" && <HistoryTimeline />}
 
       {/* Leadership */}
       {activeTab === "Leadership" && (
