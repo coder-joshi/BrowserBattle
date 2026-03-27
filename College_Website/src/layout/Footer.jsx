@@ -1,5 +1,3 @@
-FOOTER
-
 
 export default function Footer() {
     return (
