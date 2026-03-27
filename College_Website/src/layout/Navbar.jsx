@@ -1,10 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
+import { Link } from "react-router-dom"; // Import Link
 
 const menuItems = [
-  { label: "Home", submenu: ["About Us", "Vision & Mission", "Leadership"] },
-  { label: "About", submenu: ["History", "Accreditation", "Achievements"] },
+  // Added a 'path' property to each item for easy routing
+  { label: "Home", path: "/", submenu: ["About Us", "Vision & Mission", "Leadership"] },
+  { label: "About", path: "/about", submenu: ["History", "Accreditation", "Achievements"] },
   {
     label: "Departments",
+    path: "/departments",
     submenu: [
       "Civil Engineering", "Computer Science", "Mechanical",
       "Electrical", "Electronics", "Chemical",
@@ -12,14 +15,14 @@ const menuItems = [
     ],
     grid: true,
   },
-  { label: "Academics", submenu: ["Programs", "Curriculum", "Calendar"] },
-  { label: "Admissions", submenu: ["UG Admissions", "PG Admissions", "Fee Structure"] },
-  { label: "Placements", submenu: ["Recruiters", "Statistics", "Register"] },
-  { label: "Research", submenu: ["Projects", "Publications", "Labs"] },
-  { label: "Campus Life", submenu: ["Clubs", "Events", "Hostel"] },
-  { label: "Students", submenu: ["Portal", "Results", "Grievance"] },
-  { label: "Alumni", submenu: ["Network", "Events", "Donate"] },
-  { label: "Contact", submenu: ["Address", "Map", "Enquiry"] },
+  { label: "Academics", path: "/academics", submenu: ["Programs", "Curriculum", "Calendar"] },
+  { label: "Admissions", path: "/admissions", submenu: ["UG Admissions", "PG Admissions", "Fee Structure"] },
+  { label: "Placements", path: "/placements", submenu: ["Recruiters", "Statistics", "Register"] },
+  { label: "Research", path: "/research", submenu: ["Projects", "Publications", "Labs"] },
+  { label: "Campus Life", path: "/campus-life", submenu: ["Clubs", "Events", "Hostel"] },
+  { label: "Students", path: "/students", submenu: ["Portal", "Results", "Grievance"] },
+  { label: "Alumni", path: "/alumni", submenu: ["Network", "Events", "Donate"] },
+  { label: "Contact", path: "/contact", submenu: ["Address", "Map", "Enquiry"] },
 ];
 
 function DropdownItem({ item }) {
@@ -35,11 +38,9 @@ function DropdownItem({ item }) {
       const windowWidth = window.innerWidth;
 
       let left = rect.left;
-      // If it would overflow the right edge, shift left
       if (left + dropdownWidth > windowWidth - 16) {
         left = windowWidth - dropdownWidth - 16;
       }
-      // Never go off the left edge
       if (left < 8) left = 8;
 
       setDropdownStyle({ left: left, width: dropdownWidth });
@@ -53,9 +54,10 @@ function DropdownItem({ item }) {
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
     >
-      <a className="cursor-pointer px-3 py-2 rounded hover:bg-gray-100 font-medium text-sm">
+      {/* Replaced <a> with <Link> */}
+      <Link to={item.path} className="cursor-pointer px-3 py-2 rounded hover:bg-gray-100 font-medium text-sm">
         {item.label}
-      </a>
+      </Link>
 
       {open && (
         <div
@@ -70,9 +72,10 @@ function DropdownItem({ item }) {
           <ul className={item.grid ? "grid grid-cols-3 gap-1" : "flex flex-col gap-1"}>
             {item.submenu.map((sub) => (
               <li key={sub}>
-                <a className="block hover:bg-gray-100 px-3 py-1.5 rounded text-sm cursor-pointer whitespace-nowrap">
+                {/* Routing for submenus (optional, linking to a hash or section for now) */}
+                <Link to={`${item.path}#${sub.toLowerCase().replace(/ /g, '-')}`} className="block hover:bg-gray-100 px-3 py-1.5 rounded text-sm cursor-pointer whitespace-nowrap">
                   {sub}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
@@ -96,17 +99,17 @@ function Navbar() {
           <ul tabIndex="-1" className="menu menu-sm dropdown-content bg-white text-black rounded-box z-50 mt-3 w-52 p-2 shadow">
             {menuItems.map((item) => (
               <li key={item.label}>
-                <a>{item.label}</a>
+                <Link to={item.path}>{item.label}</Link>
                 {item.submenu && (
                   <ul className="p-2 bg-white text-black">
-                    {item.submenu.map((sub) => <li key={sub}><a>{sub}</a></li>)}
+                    {item.submenu.map((sub) => <li key={sub}><Link to={`${item.path}#${sub.toLowerCase().replace(/ /g, '-')}`}>{sub}</Link></li>)}
                   </ul>
                 )}
               </li>
             ))}
           </ul>
         </div>
-        <a className="btn btn-ghost text-xl font-bold">CollegeName</a>
+        <Link to="/" className="btn btn-ghost text-xl font-bold">CollegeName</Link>
       </div>
 
       {/* Desktop */}
@@ -119,7 +122,7 @@ function Navbar() {
       </div>
 
       <div className="navbar-end">
-        <a className="btn btn-primary text-white">Apply Now</a>
+        <Link to="/admissions" className="btn btn-primary text-white">Apply Now</Link>
       </div>
     </div>
   );
