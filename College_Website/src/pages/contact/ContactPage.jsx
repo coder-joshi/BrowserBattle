@@ -31,7 +31,7 @@ function ContactPage() {
     try {
       // INSIDE ContactPage.jsx -> handleSubmit function
 
-      const response = await fetch("http://localhost:5001/api/contact", {
+      const response = await fetch("https://bmsce-portal-backend.onrender.com/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         // Now sending them as 5 completely separate fields!
