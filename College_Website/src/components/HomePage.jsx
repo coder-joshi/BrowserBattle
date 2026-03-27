@@ -1,7 +1,7 @@
 
 import React from "react";
 import PlacementValue from "./PlacementValue";
-import Footer from "../layout/Footer";
+
 import Alumni from "../components/Alumni";
 import Companies from "./Companies";
 
@@ -428,7 +428,7 @@ function HomePage() {
 
       {/* COMPANIES */}
       {/* <Companies /> */}
-      <Footer />
+      
     </>
   );
 }
